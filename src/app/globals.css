@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #040919;
+  --primary-red: #fe0000;
+  --primary-yellow: #fece00;
+  --gray-text: #696868;
+  --card-bg: #fdfafa;
+  --secondary-bg: #fdfafa;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary-red: var(--primary-red);
+  --color-primary-yellow: var(--primary-yellow);
+  --color-gray-text: var(--gray-text);
+  --color-card-bg: var(--card-bg);
+  --color-secondary-bg: var(--secondary-bg);
+  --font-sans: var(--font-poppins);
+  --font-serif: var(--font-playfair);
+  --font-family-sans: var(--font-poppins), 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-serif: var(--font-playfair), 'Playfair Display', Georgia, serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-poppins), 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Utility classes for Playfair Display */
+.font-playfair {
+  font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+}
+
+.font-playfair-500 {
+  font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  font-weight: 500;
+}
+
+.font-playfair-600 {
+  font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  font-weight: 600;
+}
+
+/* Custom color utilities */
+.text-primary-red {
+  color: var(--primary-red);
+}
+
+.text-primary-yellow {
+  color: var(--primary-yellow);
+}
+
+.text-gray-text {
+  color: var(--gray-text);
+}
+
+.bg-primary-red {
+  background-color: var(--primary-red);
+}
+
+.bg-primary-yellow {
+  background-color: var(--primary-yellow);
+}
+
+.bg-card {
+  background-color: var(--card-bg);
+}
+
+.bg-secondary {
+  background-color: var(--secondary-bg);
+}
+
+/* Custom animations */
+@keyframes slideup {
+  from { 
+    transform: translateY(100%); 
+    opacity: 0;
+  }
+  to { 
+    transform: translateY(0); 
+    opacity: 1;
+  }
+}
+
+.animate-slideup {
+  animation: slideup 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Custom scrollbar */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Focus styles */
+.focus-ring-red:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: var(--primary-red);
+  ring-offset: 2px;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.card-hover:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
