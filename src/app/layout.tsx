@@ -1,6 +1,11 @@
+"use client"
+
+
 import type { Metadata } from "next";
 import { Poppins, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { Provider } from "react-redux";
+import { store } from "@/store/store";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -14,13 +19,7 @@ const playfairDisplay = Playfair_Display({
   weight: ["500", "600"],
 });
 
-export const metadata: Metadata = {
-  title: "MyOutlet - Restaurant Management Platform",
-  description: "Digital menu management and restaurant operations platform",
-  icons: {
-    icon: "/myoutlet.logo.png",
-  },
-};
+ 
 
 export default function RootLayout({
   children,
@@ -32,7 +31,9 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} ${playfairDisplay.variable} antialiased`}
       >
-        {children}
+      <Provider store={store}>
+      {children}
+      </Provider>
       </body>
     </html>
   );
