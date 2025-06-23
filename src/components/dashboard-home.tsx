@@ -59,6 +59,25 @@ export default function DashboardHome({ restaurantName, ownerEmail }: DashboardH
           Refresh Data
         </Button>
       </div>
+      {/* Custom Domain Section */}
+      <Card className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-base sm:text-lg font-medium text-[#040919]">Your Custom Domain</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+          <span className="text-sm sm:text-base text-[#696868] select-all">thegoldenspoon.myoutlet.com</span>
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-[#fece00] text-[#fece00] hover:bg-[#fece00] hover:text-[#040919] transition-colors"
+            onClick={() => {
+              navigator.clipboard.writeText('thegoldenspoon.myoutlet.com')
+            }}
+          >
+            Copy
+          </Button>
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         <Card className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200">

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { AnimatePresence } from "framer-motion"
-import { Bell, Home, LogOut, Menu, Utensils, Settings, DollarSign, X } from "lucide-react"
+import { Bell, Home, LogOut, Menu, Utensils, Settings, DollarSign, X, Image as ImageIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
@@ -28,6 +28,7 @@ export default function OwnerDashboard() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
   const [notifications, setNotifications] = useState(3)
+  const [galleryImages, setGalleryImages] = useState<string[]>([])
 
   const restaurantName = "The Golden Spoon"
   const ownerEmail = "owner@goldenspoon.com"
@@ -57,6 +58,12 @@ export default function OwnerDashboard() {
       path: "subscriptions",
       active: activeSection === "subscriptions",
     },
+    {
+      title: "Gallery",
+      icon: <ImageIcon className="h-4 w-4 sm:h-5 sm:w-5" />,
+      path: "gallery",
+      active: activeSection === "gallery",
+    },
   ]
 
   const navigateToSection = (section: string) => {
@@ -80,6 +87,25 @@ export default function OwnerDashboard() {
     // Handle support click
     console.log("Support clicked")
     // Add actual support logic here
+  }
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files) return
+    const newImages: string[] = []
+    Array.from(files).forEach(file => {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          setGalleryImages(prev => [...prev, event.target!.result as string])
+        }
+      }
+      reader.readAsDataURL(file)
+    })
+  }
+
+  const handleDeleteImage = (idx: number) => {
+    setGalleryImages(prev => prev.filter((_, i) => i !== idx))
   }
 
   useEffect(() => {
@@ -126,7 +152,6 @@ export default function OwnerDashboard() {
                     className="w-full h-full object-contain"
                   />
                 </div>
-             
               </div>
             </Link>
             {/* Close button for mobile */}
@@ -139,7 +164,7 @@ export default function OwnerDashboard() {
           </div>
           <p className="text-sm lg:text-base text-[#696868] mt-2 lg:mt-3">Restaurant Owner</p>
         </div>
-        <nav className="p-4 lg:p-4 xl:p-6 flex-1">
+        <nav className="p-4 lg:p-4 xl:p-6">
           <ul className="space-y-1 lg:space-y-2">
             {menuItems.map((item, index) => (
               <li key={index}>
@@ -158,6 +183,7 @@ export default function OwnerDashboard() {
             ))}
           </ul>
         </nav>
+        
       </div>
 
       {/* Main Content */}
@@ -242,6 +268,57 @@ export default function OwnerDashboard() {
             {activeSection === "subscriptions" && (
               <AnimatedDiv key="subscriptions">
                 <SubscriptionPage />
+              </AnimatedDiv>
+            )}
+            {activeSection === "gallery" && (
+              <AnimatedDiv key="gallery">
+                <div className="space-y-4 sm:space-y-6 lg:space-y-8">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold font-['Playfair_Display'] text-[#040919]">Gallery</h1>
+                  <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-6 border-b border-gray-100">
+                      <div className="flex items-center space-x-3">
+                        <ImageIcon className="h-6 w-6 text-[#fe0000]" />
+                        <span className="font-medium text-lg text-[#040919]">Manage your restaurant gallery images</span>
+                      </div>
+                      <label className="mt-4 sm:mt-0 cursor-pointer bg-[#fe0000] text-white px-4 py-2 rounded text-sm hover:bg-red-700 transition-colors font-medium">
+                        Upload Images
+                        <input
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          className="hidden"
+                          onChange={handleImageUpload}
+                        />
+                      </label>
+                    </div>
+                    <div className="p-6">
+                      {galleryImages.length === 0 ? (
+                        <div className="text-center text-[#696868] text-sm py-8">No images uploaded yet.</div>
+                      ) : (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                          {galleryImages.map((img, idx) => (
+                            <div key={idx} className="relative group border rounded-lg overflow-hidden bg-[#fdfafa] shadow-sm">
+                              <Image
+                                src={img}
+                                alt={`Gallery Image ${idx + 1}`}
+                                width={200}
+                                height={200}
+                                className="object-cover w-full h-32 sm:h-40"
+                              />
+                              <button
+                                className="absolute top-2 right-2 bg-[#fe0000] text-white rounded-full p-1 opacity-80 hover:opacity-100 text-xs shadow"
+                                onClick={() => handleDeleteImage(idx)}
+                                title="Delete"
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </AnimatedDiv>
             )}
           </AnimatePresence>

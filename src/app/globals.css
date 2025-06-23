@@ -10,6 +10,48 @@
   --secondary-bg: #fdfafa;
 }
 
+.dark {
+  --background: #18181b;
+  --foreground: #f3f4f6;
+  --primary-red: #fe0000;
+  --primary-yellow: #fece00;
+  --gray-text: #b0b0b0;
+  --card-bg: #23232a;
+  --secondary-bg: #23232a;
+}
+
+/* Dark mode utility overrides */
+.dark .bg-white,
+.dark.bg-white {
+  background-color: #23232a !important;
+}
+.dark .bg-card,
+.dark.bg-card {
+  background-color: #23232a !important;
+}
+.dark .bg-secondary,
+.dark.bg-secondary {
+  background-color: #23232a !important;
+}
+.dark .border-gray-200,
+.dark.border-gray-200 {
+  border-color: #393950 !important;
+}
+.dark .border-gray-100,
+.dark.border-gray-100 {
+  border-color: #23232a !important;
+}
+.dark .text-gray-700,
+.dark.text-gray-700 {
+  color: #e5e7eb !important;
+}
+.dark .text-gray-300,
+.dark.text-gray-300 {
+  color: #b0b0b0 !important;
+}
+
+/* End of dark mode overrides */
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -116,3 +158,122 @@ body {
 .card-hover:hover {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
+
+@layer utilities {
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animation-delay-100 {
+    animation-delay: 0.1s;
+  }
+  
+  .animation-delay-200 {
+    animation-delay: 0.2s;
+  }
+  
+  .animation-delay-300 {
+    animation-delay: 0.3s;
+  }
+  
+  .animation-delay-400 {
+    animation-delay: 0.4s;
+  }
+  
+  .animation-delay-500 {
+    animation-delay: 0.5s;
+  }
+  
+  .animation-delay-600 {
+    animation-delay: 0.6s;
+  }
+  
+  .animation-delay-700 {
+    animation-delay: 0.7s;
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Remove invalid selectors for Tailwind arbitrary value classes */
+/* .dark .text-[#040919], .dark.text-[#040919] { ... } and similar are not valid CSS selectors */
+/* Instead, rely on CSS variables for text and background color theming, or add custom classes if needed. */
+
+/* Example: Use variable-based theming for text color */
+body, .custom-dark-text {
+  color: var(--foreground);
+}
+
+/* Example: For backgrounds */
+.bg-white, .bg-card, .bg-secondary {
+  background-color: var(--background);
+}
+
+/* For gray text, use a custom class or variable */
+.text-gray-text {
+  color: var(--gray-text);
+}
+
+/* For borders */
+.border-gray-200 {
+  border-color: var(--border-color, #e5e7eb);
+}
+
+/* In dark mode, variables will be overridden by the .dark class on html or body */
+
+/* Make all text white in dark mode by default */
+.dark body,
+.dark body * {
+  color: #f3f4f6 !important;
+}
+
