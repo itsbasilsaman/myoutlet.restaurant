@@ -1,96 +1,206 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import { ChevronDown } from "lucide-react" // Import Lucide React icon
-import Image from "next/image"
+import type React from "react";
+import { useState, useEffect, useRef } from "react";
+import { ChevronDown } from "lucide-react"; // Import Lucide React icon
+import Image from "next/image";
+import { useAuthorizedApi } from "@/hooks/useAuthorizedApi";
 
 interface RegistrationFormProps {
-  onDetailsSubmit: () => void
+  onDetailsSubmit: () => void;
 }
 
-export default function RegistrationForm({ onDetailsSubmit }: RegistrationFormProps) {
-  const [restaurantName, setRestaurantName] = useState("")
-  const [branch, setBranch] = useState("")
-  const [currency, setCurrency] = useState("")
-  const [language, setLanguage] = useState("")
+interface RestaurantSuggestion {
+  id: string;
+  name: string;
+}
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    // In a real app, you'd send this data to your backend
-    console.log({ restaurantName, branch, currency, language })
-    onDetailsSubmit()
-  }
+export default function RegistrationForm({
+  onDetailsSubmit,
+}: RegistrationFormProps) {
+  const [restaurantName, setRestaurantName] = useState("");
+  const [subBranch, setSubBranch] = useState("");
+  const [currency, setCurrency] = useState("");
+  const [language, setLanguage] = useState("");
+  const [suggestions, setSuggestions] = useState<RestaurantSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const suggestionRef = useRef<HTMLDivElement>(null);
+  const api = useAuthorizedApi();
+  useEffect(() => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    if (restaurantName.trim().length > 2) {
+      debounceTimeoutRef.current = setTimeout(async () => {
+        setIsLoading(true);
+        try {
+          const response = await api.get(
+            `/store/parent?search=${restaurantName}`
+          );
+          const data = response.data;
+          console.log(data, "response suggestions");
+          setSuggestions(data);
+          setShowSuggestions(true);
+        } catch (error) {
+          setSuggestions([]);
+        } finally {
+          setIsLoading(false);
+        }
+      }, 300); // 300ms debounce delay
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, [restaurantName]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        suggestionRef.current &&
+        !suggestionRef.current.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleSuggestionClick = (suggestion: RestaurantSuggestion) => {
+    setRestaurantName(suggestion.name);
+    setShowSuggestions(false);
+  };
+
+  const handleRestaurantNameChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = e.target.value;
+    setRestaurantName(value);
+    if (value.trim().length <= 2) {
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const storeData = {
+        parent_store_name: restaurantName,
+        sub_branch: subBranch,
+        currency,
+        language,
+      };
+      
+      const response = await api.post("/store", storeData);
+      console.log(response.data, "response");
+
+      const res = response.data;
+      console.log("Store created successfuly:", res);
+      onDetailsSubmit();
+    } catch (error) {
+      console.error("Error creating store:", error);
+    }
+  };
 
   return (
     <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto shadow-2xl rounded-xl border border-gray-200 bg-white overflow-hidden animate-slide-in-up">
       <div className="p-4 sm:p-6 lg:p-8 text-center bg-[#fe0000] rounded-t-xl relative">
         {/* Logo */}
         <div className="absolute top-2 sm:top-4 left-2 sm:left-4">
-          <Image 
-            src="/myoutlet.logo.png" 
-            alt="MyOutlet Logo" 
-            width={40} 
-            height={40} 
+          <Image
+            src="/myoutlet.logo.png"
+            alt="MyOutlet Logo"
+            width={40}
+            height={40}
             className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 object-contain"
           />
         </div>
-        <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white mb-2 sm:mb-3 mt-2 sm:mt-4 font-['Playfair_Display']">Restaurant Details</h2>
-        <p className="text-white/90 text-xs sm:text-sm">Please fill in the required information for your restaurant.</p>
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white mb-2 sm:mb-3 mt-2 sm:mt-4 font-['Playfair_Display']">
+          Restaurant Details
+        </h2>
+        <p className="text-white/90 text-xs sm:text-sm">
+          Please fill in the required information for your restaurant.
+        </p>
       </div>
       <form onSubmit={handleSubmit}>
         <div className="p-4 sm:p-6 lg:p-8 grid gap-4 sm:gap-6">
-          <div className="grid gap-2">
-            <label htmlFor="restaurantName" className="text-sm font-semibold text-[#040919]">
+          {/* Restaurant Name with Autocomplete */}
+          <div className="grid gap-2 relative" ref={suggestionRef}>
+            <label
+              htmlFor="restaurantName"
+              className="text-sm font-semibold text-[#040919]"
+            >
               Restaurant Name
             </label>
+            <div className="relative">
+              <input
+                id="restaurantName"
+                name="restaurantName"
+                placeholder="e.g., The Golden Spoon"
+                value={restaurantName}
+                onChange={handleRestaurantNameChange}
+                required
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#fece00] focus:border-[#fe0000] transition-all duration-300 ease-in-out shadow-sm text-[#040919] placeholder-[#696868] hover:border-[#fe0000] text-sm sm:text-base"
+              />
+              {isLoading && (
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#fe0000]"></div>
+                </div>
+              )}
+            </div>
+
+            {/* Suggestions Dropdown */}
+            {showSuggestions && suggestions.length > 0 && (
+              <div className="absolute top-full left-0 right-0 z-10 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto mt-1">
+                {suggestions.map((suggestion) => (
+                  <div
+                    key={suggestion.id}
+                    className="px-3 sm:px-4 py-2 hover:bg-[#fdfafa] cursor-pointer transition-colors duration-200 text-sm sm:text-base text-[#040919] border-b border-gray-100 last:border-b-0"
+                    onClick={() => handleSuggestionClick(suggestion)}
+                  >
+                    {suggestion.name}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Sub Branch Input */}
+          <div className="grid gap-2">
+            <label
+              htmlFor="subBranch"
+              className="text-sm font-semibold text-[#040919]"
+            >
+              Sub Branch (Optional)
+            </label>
             <input
-              id="restaurantName"
-              name="restaurantName"
-              placeholder="e.g., The Golden Spoon"
-              value={restaurantName}
-              onChange={(e) => setRestaurantName(e.target.value)}
-              required
+              id="subBranch"
+              name="subBranch"
+              placeholder="e.g., Downtown, Mall Location, etc."
+              value={subBranch}
+              onChange={(e) => setSubBranch(e.target.value)}
               className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#fece00] focus:border-[#fe0000] transition-all duration-300 ease-in-out shadow-sm text-[#040919] placeholder-[#696868] hover:border-[#fe0000] text-sm sm:text-base"
             />
           </div>
+
           <div className="grid gap-2">
-            <label htmlFor="branch" className="text-sm font-semibold text-[#040919]">
-              Branch (Optional)
-            </label>
-            <div className="relative">
-              <select
-                id="branch"
-                value={branch}
-                onChange={(e) => setBranch(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#fece00] focus:border-[#fe0000] transition-all duration-300 ease-in-out shadow-sm appearance-none cursor-pointer text-[#040919] hover:border-[#fe0000] text-sm sm:text-base"
-              >
-                <option value="" className="text-[#696868]">
-                  Select branch
-                </option>
-                <option value="main" className="text-[#040919] hover:bg-[#fdfafa]">
-                  Main Branch
-                </option>
-                <option value="downtown" className="text-[#040919] hover:bg-[#fdfafa]">
-                  Downtown
-                </option>
-                <option value="uptown" className="text-[#040919] hover:bg-[#fdfafa]">
-                  Uptown
-                </option>
-                <option value="online" className="text-[#040919] hover:bg-[#fdfafa]">
-                  Online Only
-                </option>
-                <option value="other" className="text-[#040919] hover:bg-[#fdfafa]">
-                  Other
-                </option>
-              </select>
-              <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-[#696868]" />
-              </div>
-            </div>
-          </div>
-          <div className="grid gap-2">
-            <label htmlFor="currency" className="text-sm font-semibold text-[#040919]">
+            <label
+              htmlFor="currency"
+              className="text-sm font-semibold text-[#040919]"
+            >
               Default Currency
             </label>
             <div className="relative">
@@ -104,16 +214,28 @@ export default function RegistrationForm({ onDetailsSubmit }: RegistrationFormPr
                 <option value="" className="text-[#696868]">
                   Select currency
                 </option>
-                <option value="USD" className="text-[#040919] hover:bg-[#fdfafa]">
+                <option
+                  value="USD"
+                  className="text-[#040919] hover:bg-[#fdfafa]"
+                >
                   USD - United States Dollar
                 </option>
-                <option value="INR" className="text-[#040919] hover:bg-[#fdfafa]">
+                <option
+                  value="INR"
+                  className="text-[#040919] hover:bg-[#fdfafa]"
+                >
                   INR - Indian Rupee
                 </option>
-                <option value="EUR" className="text-[#040919] hover:bg-[#fdfafa]">
+                <option
+                  value="EUR"
+                  className="text-[#040919] hover:bg-[#fdfafa]"
+                >
                   EUR - Euro
                 </option>
-                <option value="GBP" className="text-[#040919] hover:bg-[#fdfafa]">
+                <option
+                  value="GBP"
+                  className="text-[#040919] hover:bg-[#fdfafa]"
+                >
                   GBP - British Pound
                 </option>
               </select>
@@ -123,7 +245,10 @@ export default function RegistrationForm({ onDetailsSubmit }: RegistrationFormPr
             </div>
           </div>
           <div className="grid gap-2">
-            <label htmlFor="language" className="text-sm font-semibold text-[#040919]">
+            <label
+              htmlFor="language"
+              className="text-sm font-semibold text-[#040919]"
+            >
               Preferred Language
             </label>
             <div className="relative">
@@ -137,16 +262,28 @@ export default function RegistrationForm({ onDetailsSubmit }: RegistrationFormPr
                 <option value="" className="text-[#696868]">
                   Select language
                 </option>
-                <option value="en" className="text-[#040919] hover:bg-[#fdfafa]">
+                <option
+                  value="en"
+                  className="text-[#040919] hover:bg-[#fdfafa]"
+                >
                   English
                 </option>
-                <option value="hi" className="text-[#040919] hover:bg-[#fdfafa]">
+                <option
+                  value="hi"
+                  className="text-[#040919] hover:bg-[#fdfafa]"
+                >
                   Hindi
                 </option>
-                <option value="es" className="text-[#040919] hover:bg-[#fdfafa]">
+                <option
+                  value="es"
+                  className="text-[#040919] hover:bg-[#fdfafa]"
+                >
                   Spanish
                 </option>
-                <option value="fr" className="text-[#040919] hover:bg-[#fdfafa]">
+                <option
+                  value="fr"
+                  className="text-[#040919] hover:bg-[#fdfafa]"
+                >
                   French
                 </option>
               </select>
@@ -166,5 +303,5 @@ export default function RegistrationForm({ onDetailsSubmit }: RegistrationFormPr
         </div>
       </form>
     </div>
-  )
+  );
 }

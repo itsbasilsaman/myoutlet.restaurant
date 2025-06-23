@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { ReduxStoreProvider } from "@/store/provider";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -32,7 +33,7 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} ${playfairDisplay.variable} antialiased`}
       >
-        {children}
+        <ReduxStoreProvider>{children}</ReduxStoreProvider>
       </body>
     </html>
   );
