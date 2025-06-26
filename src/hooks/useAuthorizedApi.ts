@@ -1,6 +1,9 @@
-import { useMemo } from 'react';
-import { authorizedApi } from '@/lib/authorizeApi';
+import { useMemo } from "react";
+// import { authorizedApi } from "@/lib/authorizeApi";
+import api from "@/lib/axios";
 
 export const useAuthorizedApi = () => {
-  return useMemo(() => authorizedApi(), []);
+  return useMemo(() => {
+    return api;
+  }, []);
 };

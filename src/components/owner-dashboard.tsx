@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { AnimatePresence } from "framer-motion"
-import { Bell, Home, LogOut, Menu, Utensils, Settings, DollarSign, X, Image as ImageIcon } from "lucide-react"
+import { Bell, Home, LogOut, Menu, Utensils, Settings, DollarSign, X, Image as ImageIcon, Table } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
@@ -17,11 +17,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import DashboardHome from "@/components/dashboard-home"
+import DashboardHome from "./dashboard-home"
 import MenuManagement from "@/components/menu-management"
 import SettingsPage from "@/components/settings-page"
 import SubscriptionPage from "@/components/subscription-page"
 import AnimatedDiv from "@/components/ui/animated-div"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store"
+import TableManagement from "./TableManagement"
 
 export default function OwnerDashboard() {
   const [darkMode, setDarkMode] = useState(false)
@@ -30,7 +33,8 @@ export default function OwnerDashboard() {
   const [notifications, setNotifications] = useState(3)
   const [galleryImages, setGalleryImages] = useState<string[]>([])
 
-  const restaurantName = "The Golden Spoon"
+  // const dispatch = useAppDispatch()
+  const restaurantName = useSelector((state: RootState) => state.restaurant.data?.[0]?.name || "The Golden Spoon")
   const ownerEmail = "owner@goldenspoon.com"
 
   const menuItems = [
@@ -64,6 +68,12 @@ export default function OwnerDashboard() {
       path: "gallery",
       active: activeSection === "gallery",
     },
+    {
+      title: "Table Management",
+      icon: <Table className="h-4 w-4 sm:h-5 sm:w-5" />,
+      path: "table",
+      active: activeSection === "table",
+    }
   ]
 
   const navigateToSection = (section: string) => {
@@ -252,7 +262,7 @@ export default function OwnerDashboard() {
           <AnimatePresence mode="wait">
             {activeSection === "home" && (
               <AnimatedDiv key="home">
-                <DashboardHome restaurantName={restaurantName} ownerEmail={ownerEmail} />
+                <DashboardHome />
               </AnimatedDiv>
             )}
             {activeSection === "menu" && (
@@ -268,6 +278,11 @@ export default function OwnerDashboard() {
             {activeSection === "subscriptions" && (
               <AnimatedDiv key="subscriptions">
                 <SubscriptionPage />
+              </AnimatedDiv>
+            )}
+            {activeSection === "table" && (
+              <AnimatedDiv key="table">
+                <TableManagement />
               </AnimatedDiv>
             )}
             {activeSection === "gallery" && (

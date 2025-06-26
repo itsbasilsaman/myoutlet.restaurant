@@ -1,10 +1,10 @@
-"use client"
-
+"use client";
 
 import type { Metadata } from "next";
 import { Poppins, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ReduxStoreProvider } from "@/store/provider";
+import AuthGuard from "@/components/AuthGuard";
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
@@ -17,8 +17,6 @@ const playfairDisplay = Playfair_Display({
   weight: ["500", "600"],
 });
 
- 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,7 +27,9 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} ${playfairDisplay.variable} antialiased`}
       >
-        <ReduxStoreProvider>{children}</ReduxStoreProvider>
+        <ReduxStoreProvider>
+          <AuthGuard>{children}</AuthGuard>
+        </ReduxStoreProvider>
       </body>
     </html>
   );
