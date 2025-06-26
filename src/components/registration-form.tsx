@@ -5,6 +5,8 @@ import { useState, useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { useAuthorizedApi } from "@/hooks/useAuthorizedApi";
+import { useAppDispatch } from "@/hooks/useDispatch";
+import { setRestaurantData } from "@/store/slices/restaurantSlice";
 
 interface RegistrationFormProps {
   onDetailsSubmit: () => void;
@@ -25,10 +27,14 @@ export default function RegistrationForm({
   const [suggestions, setSuggestions] = useState<RestaurantSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState<string | null>(null);
+
 
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const suggestionRef = useRef<HTMLDivElement>(null);
   const api = useAuthorizedApi();
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (debounceTimeoutRef.current) {
@@ -40,7 +46,7 @@ export default function RegistrationForm({
         setIsLoading(true);
         try {
           const response = await api.get(
-            `/store/parent?search=${restaurantName}`
+            `/store/main-branches?search=${restaurantName}`
           );
           const data = response.data;
           console.log(data, "response suggestions");
@@ -82,6 +88,7 @@ export default function RegistrationForm({
 
   const handleSuggestionClick = (suggestion: RestaurantSuggestion) => {
     setRestaurantName(suggestion.name);
+    setSelectedRestaurantId(suggestion.id);
     setShowSuggestions(false);
   };
 
@@ -90,6 +97,7 @@ export default function RegistrationForm({
   ) => {
     const value = e.target.value;
     setRestaurantName(value);
+    setSelectedRestaurantId(null);
     if (value.trim().length <= 2) {
       setShowSuggestions(false);
     }
@@ -99,18 +107,19 @@ export default function RegistrationForm({
     e.preventDefault();
     try {
       const storeData = {
+        parent_store_id: selectedRestaurantId,
         parent_store_name: restaurantName,
-        sub_branch: subBranch,
+        name: subBranch,
         currency,
         language,
       };
       
       const response = await api.post("/store", storeData);
-      console.log(response.data, "response");
-
-      const res = response.data;
-      console.log("Store created successfully:", res);
-      onDetailsSubmit();
+      console.log(response, "response");
+      console.log("Store created successfully:", response.data);
+      dispatch(setRestaurantData(response.data));
+      // onDetailsSubmit();
+      console.log("cameeeeeeeeeeeeee")
     } catch (error) {
       console.error("Error creating store:", error);
     }

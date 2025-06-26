@@ -5,7 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { useAppDispatch } from "@/hooks/useDispatch";
 import { checkUserStoreAction } from "@/store/actions/checkUserStore";
-import { setRestaurant } from "@/store/slices/restaurantSlice";
+import { setTokens } from "@/store/slices/restaurantSlice";
+import authService from "@/lib/authService";
 
 export default function GoogleRedirectPage() {
   const router = useRouter();
@@ -22,27 +23,32 @@ export default function GoogleRedirectPage() {
           const user = JSON.parse(encodedUser);
           const refreshToken = user.refresh_token;
           // Save in cookies
-          Cookies.set("access_token", accessToken);
-          Cookies.set("user", JSON.stringify(user));
-          if(refreshToken) {
-            Cookies.set('refresh_token', refreshToken);
-          }
-
-          dispatch(setRestaurant({token: accessToken, ...user}));
+          authService.setTokens(accessToken, refreshToken);
           
           const res = await dispatch(checkUserStoreAction(accessToken));
 
           console.log(res,"response")
 
+          const { shouldRedirectTo } = authService.getAuthStatus();
 
-          if (Array.isArray(res.payload) && res.payload.length > 0) {
-            router.replace("/dashboard");
+          if (shouldRedirectTo) {
+            router.replace(shouldRedirectTo);
           } else {
-            router.replace("/register");
+            // Fallback logic
+            if (Array.isArray(res.payload) && res.payload.length > 0) {
+              router.replace("/dashboard");
+            } else {
+              router.replace("/register");
+            }
           }
         } catch (error) {
           console.error("Auth handling error:", error);
+          authService.clearAuthData();
+          router.replace("/");
         }
+      } else {
+        console.error("Missing authentication parameters");
+        router.replace("/");
       }
     };
 
