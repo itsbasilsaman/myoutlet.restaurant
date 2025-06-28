@@ -80,7 +80,7 @@ export default function MenuManagement() {
     console.log("Opening Google Sheet...");
     try {
       const response = await api.get("/store/by-owner");
-      console.log(response)
+      console.log(response);
       if (response.data) {
         const sheetId = response.data[0].google_sheet_id;
         window.open(
