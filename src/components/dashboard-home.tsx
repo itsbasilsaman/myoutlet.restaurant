@@ -30,14 +30,12 @@ export default function DashboardHome() {
 
   
   console.log(data, "dataaa in the dashboard");
-  // Get the first restaurant data (assuming it's an array with one item)
   const restaurantData = data && data.length > 0 ? data[0] : null;
 
   // Extract restaurant information
   const restaurantName = restaurantData?.name || "Restaurant Name";
-  const ownerEmail = "owner@restaurant.com";
   const customDomain = restaurantData?.qrcode || "";
-  const currency = restaurantData?.currency || "INR";
+  const currency = restaurantData?.currency || "";
   const language =
     restaurantData?.language === "en"
       ? "English"

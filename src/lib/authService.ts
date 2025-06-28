@@ -32,11 +32,11 @@ class AuthService {
             }
         );
         // Response interceptor to handle token refresh
-        api.interceptors.request.use(
+        api.interceptors.response.use(
             (response) => response,
             async (error) => {
                 const originalRequest = error.config;
-                if(error.response?.status === 401 && !originalRequest._retry) {
+                if(error.response?.status === 401 && !originalRequest._retry && this.getRefreshToken()) {
                     if(this.isRefreshing) {
                         return new Promise((resolve, reject) => {
                             this.failedRequestsQueue.push({resolve, reject});

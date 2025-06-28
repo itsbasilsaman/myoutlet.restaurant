@@ -29,14 +29,22 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         const cookieToken = Cookies.get("access_token");
         const cookieRefreshToken = Cookies.get("refresh_token");
 
-        if (cookieToken && !token) {
+      if (!cookieToken && cookieRefreshToken) {
+        try {
+          const newToken = await authService.getRefreshToken();
           dispatch(
             setTokens({
-              token: cookieToken,
+              token: newToken,
               refreshToken: cookieRefreshToken,
             })
           );
+        } catch (refreshError) {
+          authService.clearAuthData();
+          router.replace("/");
+          setIsInitialized(true);
+          return;
         }
+      }
 
         const currentToken = token || cookieToken;
         if (
@@ -76,9 +84,6 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
       const protectedRoutes = [
         "/dashboard",
-        "/menu",
-        "/analytics",
-        "/settings",
       ];
       const authRoutes = ["/register"];
       const publicRoutes = ["/"];

@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function QRCodeModal({ onClose, domain }: Props) {
-  const qrRef = useRef<SVGSVGElement | null>(null); // ✅ Declare here
+  const qrRef = useRef<SVGSVGElement | null>(null);
   const qrValue = domain.startsWith("http") ? domain : `https://${domain}`;
 
   const handleDownload = () => {

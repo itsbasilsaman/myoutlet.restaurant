@@ -57,7 +57,7 @@ export default function RegistrationForm({
         } finally {
           setIsLoading(false);
         }
-      }, 300); // 300ms debounce delay
+      }, 300);
     } else {
       setSuggestions([]);
       setShowSuggestions(false);
@@ -115,11 +115,7 @@ export default function RegistrationForm({
       };
       
       const response = await api.post("/store", storeData);
-      console.log(response, "response");
-      console.log("Store created successfully:", response.data);
       dispatch(setRestaurantData(response.data));
-      // onDetailsSubmit();
-      console.log("cameeeeeeeeeeeeee")
     } catch (error) {
       console.error("Error creating store:", error);
     }
