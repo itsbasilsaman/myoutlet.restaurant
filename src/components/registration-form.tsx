@@ -14,7 +14,11 @@ interface RestaurantSuggestion {
   name: string;
 }
 
-export default function RegistrationForm() {
+interface RegistrationFormProps {
+  onDetailsSubmit?: () => void;
+}
+
+export default function RegistrationForm({ onDetailsSubmit }: RegistrationFormProps) {
   const [restaurantName, setRestaurantName] = useState("");
   const [subBranch, setSubBranch] = useState("");
   const [currency, setCurrency] = useState("");
@@ -108,9 +112,9 @@ export default function RegistrationForm() {
         currency,
         language,
       };
-      
       const response = await api.post("/store", storeData);
       dispatch(setRestaurantData(response.data));
+      if (onDetailsSubmit) onDetailsSubmit();
     } catch {
       // Optionally log error for debugging
     }
