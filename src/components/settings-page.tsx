@@ -163,7 +163,7 @@ export default function SettingsPage() {
           Restaurant Settings
         </h1>
         <p className="text-[#696868] text-sm sm:text-base lg:text-lg">
-          Customize your restaurant's digital experience
+          Customize your restaurant&apos;s digital experience
         </p>
       </div>
 
@@ -177,7 +177,7 @@ export default function SettingsPage() {
             Branding & Appearance
           </CardTitle>
           <CardDescription className="text-[#696868] text-sm sm:text-base">
-            Customize your restaurant's digital presence and visual identity.
+            Customize your restaurant&apos;s digital presence and visual identity.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-4 sm:p-6 space-y-4 sm:space-y-6">
@@ -249,7 +249,7 @@ export default function SettingsPage() {
             Branch & Localization
           </CardTitle>
           <CardDescription className="text-[#696868]">
-            Manage your restaurant's branch, language, and currency settings.
+            Manage your restaurant&apos;s branch, language, and currency settings.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 space-y-6">

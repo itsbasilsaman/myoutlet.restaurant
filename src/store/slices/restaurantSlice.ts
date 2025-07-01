@@ -14,6 +14,8 @@ export interface RestaurantStateType {
   tables: unknown[];
 }
 
+type Table = { id: string; [key: string]: unknown };
+
 const initialState: RestaurantStateType = {
   loading: false,
   data: null,
@@ -94,7 +96,7 @@ const restaurantSlice = createSlice({
       })
       .addCase(updateTableAction.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.tables.findIndex(table => typeof table === 'object' && table !== null && 'id' in table && (table as any).id === action.payload.id);
+        const index = state.tables.findIndex(table => typeof table === 'object' && table !== null && 'id' in table && (table as Table).id === action.payload.id);
         if (index !== -1) {
           state.tables[index] = action.payload;
         }
@@ -111,7 +113,7 @@ const restaurantSlice = createSlice({
       })
       .addCase(deleteTableAction.fulfilled, (state, action) => {
         state.loading = false;
-        state.tables = state.tables.filter(table => typeof table === 'object' && table !== null && 'id' in table && (table as any).id !== action.payload);
+        state.tables = state.tables.filter(table => typeof table === 'object' && table !== null && 'id' in table && (table as Table).id !== action.payload);
       })
       .addCase(deleteTableAction.rejected, (state, action) => {
         state.loading = false;
