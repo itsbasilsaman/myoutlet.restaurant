@@ -65,7 +65,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
       }
     };
     initializedAuth();
-  }, [dispatch, token, data]);
+  }, [dispatch, token, data, router]);
 
   useEffect(() => {
     if (!isInitialized) {

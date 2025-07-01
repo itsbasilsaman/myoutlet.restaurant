@@ -9,9 +9,15 @@ interface TokenResponse {
     refresh_token: string;
 }
 
+// Define a type for the failedRequestsQueue items
+interface FailedRequest {
+  resolve: (value?: unknown) => void;
+  reject: (reason?: unknown) => void;
+}
+
 class AuthService {
     private isRefreshing = false;
-    private failedRequestsQueue: unknown[] = [];
+    private failedRequestsQueue: FailedRequest[] = [];
 
     constructor() {
         this.setupInterceptors();
@@ -75,7 +81,7 @@ class AuthService {
         
 }
 
-private processQueue(error: any, token: string | null) {
+private processQueue(error: unknown, token: string | null) {
     this.failedRequestsQueue.forEach(({ resolve, reject }) => {
       if(error)  {
         reject(error);

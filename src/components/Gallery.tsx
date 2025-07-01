@@ -48,7 +48,7 @@ const Gallery = () => {
     if (!files || files.length === 0 || !storeId) return;
 
     const formData = new FormData();
-    for (let file of Array.from(files)) {
+    for (const file of Array.from(files)) {
       formData.append("file", file);
     }
 
