@@ -51,9 +51,9 @@ export default function RegistrationForm({ onDetailsSubmit }: RegistrationFormPr
           console.log(data, "response suggestions");
           setSuggestions(data);
           setShowSuggestions(true);
-        } catch {
+        } catch (error) {
           setSuggestions([]);
-          console.log(error,"error");
+          console.log(error, "error");
         } finally {
           setIsLoading(false);
         }
@@ -115,7 +115,7 @@ export default function RegistrationForm({ onDetailsSubmit }: RegistrationFormPr
       };
       const response = await api.post("/store", storeData);
       dispatch(setRestaurantData(response.data));
-      onDetailsSubmit();
+      if (onDetailsSubmit) onDetailsSubmit();
     } catch (error) {
       console.error("Error creating store:", error);
     }
