@@ -14,7 +14,6 @@ interface FailedRequest {
   reject: (err: unknown) => void;
 }
 
-
 class AuthService {
     private isRefreshing = false;
     private failedRequestsQueue: FailedRequest[] = [];

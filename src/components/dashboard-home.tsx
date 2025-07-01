@@ -30,7 +30,7 @@ export default function DashboardHome() {
 
   
   console.log(data, "dataaa in the dashboard");
-  const restaurantData = data && data.length > 0 ? data[0] : null;
+  const restaurantData = Array.isArray(data) && data.length > 0 ? data[0] : null;
 
   // Extract restaurant information
   const restaurantName = restaurantData?.name || "Restaurant Name";

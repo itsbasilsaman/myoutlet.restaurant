@@ -21,7 +21,7 @@ const Gallery = () => {
 
   const api = useAuthorizedApi();
   const { data } = useSelector((state: RootState) => state.restaurant);
-  const storeId = data?.[0]?.id;
+  const storeId = Array.isArray(data) && data.length > 0 ? data[0].id : undefined;
 
   console.log(galleryImages,"galleryimagesssss")
 

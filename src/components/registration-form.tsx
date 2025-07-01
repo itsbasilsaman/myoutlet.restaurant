@@ -8,18 +8,17 @@ import { useAuthorizedApi } from "@/hooks/useAuthorizedApi";
 import { useAppDispatch } from "@/hooks/useDispatch";
 import { setRestaurantData } from "@/store/slices/restaurantSlice";
 
-interface RegistrationFormProps {
-  onDetailsSubmit: () => void;
-}
-
+// Add RestaurantSuggestion interface for type safety
 interface RestaurantSuggestion {
   id: string;
   name: string;
 }
 
-export default function RegistrationForm({
-  onDetailsSubmit,
-}: RegistrationFormProps) {
+interface RegistrationFormProps {
+  onDetailsSubmit?: () => void;
+}
+
+export default function RegistrationForm({ onDetailsSubmit }: RegistrationFormProps) {
   const [restaurantName, setRestaurantName] = useState("");
   const [subBranch, setSubBranch] = useState("");
   const [currency, setCurrency] = useState("");
@@ -52,7 +51,7 @@ export default function RegistrationForm({
           console.log(data, "response suggestions");
           setSuggestions(data);
           setShowSuggestions(true);
-        } catch (error) {
+        } catch {
           setSuggestions([]);
           console.log(error,"error");
         } finally {
@@ -114,7 +113,6 @@ export default function RegistrationForm({
         currency,
         language,
       };
-      
       const response = await api.post("/store", storeData);
       dispatch(setRestaurantData(response.data));
       onDetailsSubmit();

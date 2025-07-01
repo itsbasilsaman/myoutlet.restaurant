@@ -4,19 +4,16 @@ interface SelectProps {
   value: string;
   onValueChange: (value: string) => void;
   children: React.ReactNode;
-  required?: boolean;
 }
 
 interface SelectTriggerProps {
   id?: string;
   children: React.ReactNode;
   onClick?: () => void;
-  isOpen?: boolean;
 }
 
 interface SelectContentProps {
   children: React.ReactNode;
-  isOpen?: boolean;
 }
 
 interface SelectItemProps {
@@ -27,7 +24,6 @@ interface SelectItemProps {
 
 interface SelectValueProps {
   placeholder?: string;
-  value?: string;
 }
 
 type SelectComponent = React.FC<SelectProps> & {
@@ -50,9 +46,7 @@ const SelectTrigger: React.FC<SelectTriggerProps> = ({ id, children, onClick }) 
   );
 };
 
-const SelectContent: React.FC<SelectContentProps> = ({ children, isOpen }) => {
-  if (!isOpen) return null;
-
+const SelectContent: React.FC<SelectContentProps> = ({ children }) => {
   return (
     <div className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
       {children}
@@ -71,8 +65,8 @@ const SelectItem: React.FC<SelectItemProps> = ({ value, children, onSelect }) =>
   );
 };
 
-const SelectValue: React.FC<SelectValueProps> = ({ placeholder, value }) => {
-  return <span className="block truncate">{value || placeholder}</span>;
+const SelectValue: React.FC<SelectValueProps> = ({ placeholder }) => {
+  return <span className="block truncate">{placeholder}</span>;
 };
 
 const Select: SelectComponent = ({ onValueChange, children }) => {
@@ -108,12 +102,11 @@ const Select: SelectComponent = ({ onValueChange, children }) => {
     if (React.isValidElement(child)) {
       if (child.type === SelectTrigger) {
         return React.cloneElement(child, { 
-          onClick: handleTriggerClick,
-          isOpen 
+          onClick: handleTriggerClick
         } as SelectTriggerProps);
       }
       if (child.type === SelectContent) {
-        return React.cloneElement(child, { isOpen } as SelectContentProps);
+        return React.cloneElement(child, {} as SelectContentProps);
       }
       if (child.type === SelectItem) {
         return React.cloneElement(child, { onSelect: handleItemSelect } as SelectItemProps);

@@ -99,7 +99,6 @@ export default function OwnerDashboard() {
     // Add actual support logic here
   }
 
-
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark")
