@@ -1,8 +1,6 @@
 import React from 'react';
 
-interface LabelProps extends Record<string, unknown> {}
-
-export const Label: React.FC<LabelProps> = ({ className = '', ...props }) => {
+export const Label: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>> = ({ className = '', ...props }) => {
   return (
     <label
       className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${className}`}

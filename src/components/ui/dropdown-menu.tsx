@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-interface DropdownMenuProps extends Record<string, unknown> {
+interface DropdownMenuProps extends object {
   children: React.ReactNode;
 }
 

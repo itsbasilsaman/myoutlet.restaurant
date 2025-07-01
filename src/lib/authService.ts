@@ -147,7 +147,7 @@ private processQueue(error: unknown, token: string | null) {
 
   public hasStoreData(): boolean {
     const storeData = store.getState().restaurant.data;
-    return storeData && Array.isArray(storeData) && storeData.length > 0;
+    return   Array.isArray(storeData) && storeData.length > 0;
   }
 
   public getAuthStatus(): {
