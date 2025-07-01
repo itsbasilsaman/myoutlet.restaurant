@@ -25,6 +25,7 @@ import AnimatedDiv from "@/components/ui/animated-div"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 import TableManagement from "./TableManagement"
+import Gallery from "./Gallery"
 
 export default function OwnerDashboard() {
   const [darkMode, setDarkMode] = useState(false)
@@ -287,53 +288,7 @@ export default function OwnerDashboard() {
             )}
             {activeSection === "gallery" && (
               <AnimatedDiv key="gallery">
-                <div className="space-y-4 sm:space-y-6 lg:space-y-8">
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold font-['Playfair_Display'] text-[#040919]">Gallery</h1>
-                  <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-6 border-b border-gray-100">
-                      <div className="flex items-center space-x-3">
-                        <ImageIcon className="h-6 w-6 text-[#fe0000]" />
-                        <span className="font-medium text-lg text-[#040919]">Manage your restaurant gallery images</span>
-                      </div>
-                      <label className="mt-4 sm:mt-0 cursor-pointer bg-[#fe0000] text-white px-4 py-2 rounded text-sm hover:bg-red-700 transition-colors font-medium">
-                        Upload Images
-                        <input
-                          type="file"
-                          accept="image/*"
-                          multiple
-                          className="hidden"
-                          onChange={handleImageUpload}
-                        />
-                      </label>
-                    </div>
-                    <div className="p-6">
-                      {galleryImages.length === 0 ? (
-                        <div className="text-center text-[#696868] text-sm py-8">No images uploaded yet.</div>
-                      ) : (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                          {galleryImages.map((img, idx) => (
-                            <div key={idx} className="relative group border rounded-lg overflow-hidden bg-[#fdfafa] shadow-sm">
-                              <Image
-                                src={img}
-                                alt={`Gallery Image ${idx + 1}`}
-                                width={200}
-                                height={200}
-                                className="object-cover w-full h-32 sm:h-40"
-                              />
-                              <button
-                                className="absolute top-2 right-2 bg-[#fe0000] text-white rounded-full p-1 opacity-80 hover:opacity-100 text-xs shadow"
-                                onClick={() => handleDeleteImage(idx)}
-                                title="Delete"
-                              >
-                                <X className="h-4 w-4" />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                <Gallery/>
               </AnimatedDiv>
             )}
           </AnimatePresence>
