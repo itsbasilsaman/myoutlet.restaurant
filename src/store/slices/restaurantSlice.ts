@@ -4,14 +4,15 @@ import { fetchTablesAction } from "../actions/fetchTablesAction";
 import { addTableAction } from "../actions/addTableAction";
 import { deleteTableAction } from "../actions/deleteTableAction";
 import { updateTableAction } from "../actions/updateTableAction";
+import { StoreType, TableType } from "@/types/restaurant.type";
 
 export interface RestaurantStateType {
   loading: boolean;
-  data: unknown;
+  data: StoreType[] | null; 
   token: string | null;
   refreshToken: string | null;
   error: string | null;
-  tables: unknown[];
+  tables: TableType[];
 }
 
 type Table = { id: string; [key: string]: unknown };

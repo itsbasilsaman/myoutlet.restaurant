@@ -26,8 +26,6 @@ interface DropdownMenuLabelProps {
   children: React.ReactNode;
 }
 
-type DropdownMenuSeparatorProps = unknown;
-
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -75,7 +73,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({ children }) => {
 
 export const DropdownMenuTrigger: React.FC<DropdownMenuTriggerProps> = ({ children, asChild, onClick }) => {
   if (asChild && React.isValidElement(children)) {
-    return React.cloneElement(children as React.ReactElement<Record<string, unknown>>, { onClick });
+    return React.cloneElement(children as React.ReactElement<React.HTMLAttributes<HTMLElement>>, { onClick });
   }
   
   return (
@@ -127,6 +125,6 @@ export const DropdownMenuLabel: React.FC<DropdownMenuLabelProps> = ({ children }
   return <div className="block px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 font-serif">{children}</div>;
 };
 
-export const DropdownMenuSeparator: React.FC<DropdownMenuSeparatorProps> = () => {
+export const DropdownMenuSeparator: React.FC = () => {
   return <div className="border-t border-gray-100 dark:border-gray-700 my-1"></div>;
-}; 
+};

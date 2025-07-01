@@ -94,7 +94,7 @@ export default function DashboardHome() {
   };
 
   const handleDomainClick = () => {
-    const domain = customDomain || `${restaurantData.subdomain}.myoutlet.app`;
+    const domain = customDomain || (restaurantData ? `${restaurantData.subdomain}.myoutlet.app` : "");
     const url = domain.startsWith("http") ? domain : `https://${domain}`;
     window.open(url, "_blank");
   };

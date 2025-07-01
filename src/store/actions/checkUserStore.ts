@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "@/lib/axios";
+import { AxiosError } from "axios";
 
 export const checkUserStoreAction = createAsyncThunk(
   "restaurant/checkUserStore",
@@ -12,7 +13,8 @@ export const checkUserStoreAction = createAsyncThunk(
       });
 
       return response.data;
-    } catch (error: unknown) {
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
       return rejectWithValue(error?.message || "Failed to fetch store");
     }
   }

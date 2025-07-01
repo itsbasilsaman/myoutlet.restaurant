@@ -69,7 +69,7 @@ const SelectValue: React.FC<SelectValueProps> = ({ placeholder }) => {
   return <span className="block truncate">{placeholder}</span>;
 };
 
-const Select: SelectComponent = ({   onValueChange, children }) => {
+const Select: SelectComponent = ({ onValueChange, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
 

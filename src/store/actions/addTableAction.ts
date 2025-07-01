@@ -1,5 +1,6 @@
 import api from "@/lib/axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
 export const addTableAction = createAsyncThunk(
   "restaurant/addTable",
@@ -22,9 +23,10 @@ export const addTableAction = createAsyncThunk(
         },
       });
       return response.data;
-    } catch (err: unknown) {
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
       return rejectWithValue(
-        err instanceof Error ? err.message : "Failed to fetch tables"
+        error.response?.data?.message || "Failed to fetch tables"
       );
     }
   }

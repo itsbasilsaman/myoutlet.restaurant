@@ -34,19 +34,31 @@ const QRCodeDisplay = ({
   tableId,
   tableName,
   qrcode,
-  qrRef,
+  setSvgRef,
 }: {
   tableId: string;
   tableName: string;
   qrcode?: string;
-  qrRef: unknown;
+  setSvgRef: (svg: SVGSVGElement | null) => void;
 }) => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const svg = containerRef.current.querySelector("svg");
+      setSvgRef(svg instanceof SVGSVGElement ? svg : null);
+    }
+  }, [tableId, qrcode, setSvgRef]);
+
   const qrData = qrcode || `https://restaurant.myoutlet.app/table/${tableId}`;
 
   return (
-    <div className="flex flex-col items-center p-4 bg-white border-2 border-gray-200 rounded-lg">
+    <div
+      className="flex flex-col items-center p-4 bg-white border-2 border-gray-200 rounded-lg"
+      ref={containerRef}
+    >
       <div className="p-4 bg-white border border-gray-300 rounded-lg mb-2">
-        <QRCode value={qrData} size={128} ref={qrRef} />
+        <QRCode value={qrData} size={128} />
       </div>
       <p className="text-sm font-medium text-[#040919] text-center">
         {tableName}
@@ -278,7 +290,7 @@ const TableManagement = () => {
               tableId={selectedTable.id}
               tableName={selectedTable.table_name}
               qrcode={selectedTable.qrcode}
-              qrRef={qrRef}
+              setSvgRef={(svg) => (qrRef.current = svg)}
             />
 
             <div className="flex gap-3 mt-4">
@@ -361,7 +373,6 @@ const TableManagement = () => {
                       <QrCode className="h-4 w-4 mr-2" />
                       View QR Code
                     </button>
-                    
                   </div>
                   <div className="mt-3 pt-3 border-t border-gray-200">
                     <p className="text-xs text-[#696868] break-all">

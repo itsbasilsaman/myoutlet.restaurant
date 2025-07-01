@@ -9,10 +9,9 @@ interface TokenResponse {
     refresh_token: string;
 }
 
-// Define a type for the failedRequestsQueue items
 interface FailedRequest {
-  resolve: (value?: unknown) => void;
-  reject: (reason?: unknown) => void;
+  resolve: (token: string) => void;
+  reject: (err: unknown) => void;
 }
 
 class AuthService {
@@ -82,15 +81,16 @@ class AuthService {
 }
 
 private processQueue(error: unknown, token: string | null) {
-    this.failedRequestsQueue.forEach(({ resolve, reject }) => {
-      if(error)  {
-        reject(error);
-      } else {
-        resolve(token);
-      }
-    });
-    this.failedRequestsQueue = [];
-  }
+  this.failedRequestsQueue.forEach(({ resolve, reject }) => {
+    if (error) {
+      reject(error);
+    } else {
+      resolve(token!);
+    }
+  });
+  this.failedRequestsQueue = [];
+}
+
 
   private async refreshToken(): Promise<string> {
    const refreshToken = this.getRefreshToken();
@@ -147,7 +147,7 @@ private processQueue(error: unknown, token: string | null) {
 
   public hasStoreData(): boolean {
     const storeData = store.getState().restaurant.data;
-    return   Array.isArray(storeData) && storeData.length > 0;
+    return !!(storeData && Array.isArray(storeData) && storeData.length > 0);
   }
 
   public getAuthStatus(): {

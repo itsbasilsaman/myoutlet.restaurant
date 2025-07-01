@@ -53,6 +53,7 @@ export default function RegistrationForm({ onDetailsSubmit }: RegistrationFormPr
           setShowSuggestions(true);
         } catch {
           setSuggestions([]);
+          console.log(error,"error");
         } finally {
           setIsLoading(false);
         }
@@ -114,9 +115,9 @@ export default function RegistrationForm({ onDetailsSubmit }: RegistrationFormPr
       };
       const response = await api.post("/store", storeData);
       dispatch(setRestaurantData(response.data));
-      if (onDetailsSubmit) onDetailsSubmit();
-    } catch {
-      // Optionally log error for debugging
+      onDetailsSubmit();
+    } catch (error) {
+      console.error("Error creating store:", error);
     }
   };
 

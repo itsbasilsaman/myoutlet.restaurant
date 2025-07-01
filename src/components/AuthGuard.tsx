@@ -29,22 +29,22 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         const cookieToken = Cookies.get("access_token");
         const cookieRefreshToken = Cookies.get("refresh_token");
 
-      if (!cookieToken && cookieRefreshToken) {
-        try {
-          const newToken = await authService.getRefreshToken();
-          dispatch(
-            setTokens({
-              token: newToken,
-              refreshToken: cookieRefreshToken,
-            })
-          );
-        } catch {
-          authService.clearAuthData();
-          router.replace("/");
-          setIsInitialized(true);
-          return;
+        if (!cookieToken && cookieRefreshToken) {
+          try {
+            const newToken = await authService.getRefreshToken();
+            dispatch(
+              setTokens({
+                token: newToken,
+                refreshToken: cookieRefreshToken,
+              })
+            );
+          } catch {
+            authService.clearAuthData();
+            router.replace("/");
+            setIsInitialized(true);
+            return;
+          }
         }
-      }
 
         const currentToken = token || cookieToken;
         if (
@@ -82,9 +82,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         currentPath: pathname,
       });
 
-      const protectedRoutes = [
-        "/dashboard",
-      ];
+      const protectedRoutes = ["/dashboard"];
       const authRoutes = ["/register"];
       const publicRoutes = ["/"];
 
@@ -108,8 +106,6 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         } else if (hasStoreData) {
           router.replace("/dashboard");
         }
-      } else if (isPublicRoute && hasToken && hasStoreData) {
-        router.replace("/dashboard");
       } else if (isPublicRoute && hasToken && hasStoreData) {
         router.replace("/dashboard");
       } else if (pathname === "google/redirect") {
