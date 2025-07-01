@@ -38,7 +38,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
               refreshToken: cookieRefreshToken,
             })
           );
-        } catch (error) {
+        } catch {
           authService.clearAuthData();
           router.replace("/");
           setIsInitialized(true);
@@ -53,14 +53,14 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         ) {
           try {
             await dispatch(checkUserStoreAction(currentToken));
-          } catch (error) {
-            console.error("Error checking user store:", error);
+          } catch {
+            // Optionally log error for debugging
           }
         }
 
         setIsInitialized(true);
-      } catch (error) {
-        console.error("Error initializing authentication:", error);
+      } catch {
+        // Optionally log error for debugging
         setIsInitialized(true);
       }
     };

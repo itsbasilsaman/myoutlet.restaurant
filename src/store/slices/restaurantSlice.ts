@@ -7,7 +7,7 @@ import { updateTableAction } from "../actions/updateTableAction";
 
 export interface RestaurantStateType {
   loading: boolean;
-  data: any;
+  data: unknown;
   token: string | null;
   refreshToken: string | null;
   error: string | null;
