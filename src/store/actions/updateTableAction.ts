@@ -1,5 +1,6 @@
 import api from "@/lib/axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
 interface UpdateTableParams {
   tableId: string;
@@ -24,7 +25,8 @@ export const updateTableAction = createAsyncThunk(
         }
       );
       return response.data;
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
       return rejectWithValue(error.response?.data || error.message);
     }
   }

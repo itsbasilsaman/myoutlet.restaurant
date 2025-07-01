@@ -2,10 +2,8 @@
 
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Cookies from "js-cookie";
 import { useAppDispatch } from "@/hooks/useDispatch";
 import { checkUserStoreAction } from "@/store/actions/checkUserStore";
-import { setTokens } from "@/store/slices/restaurantSlice";
 import authService from "@/lib/authService";
 
 export default function GoogleRedirectPage() {

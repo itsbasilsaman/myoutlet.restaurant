@@ -1,35 +1,56 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Badge } from "@/components/ui/badge"
-import { Switch } from "@/components/ui/switch"
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Switch } from "@/components/ui/switch";
 
 // Custom Dropdown Component
 interface DropdownProps {
-  value: string
-  onValueChange: (value: string) => void
-  placeholder: string
-  options: Array<{ value: string; label: string; icon?: string; status?: string }>
-  className?: string
+  value: string;
+  onValueChange: (value: string) => void;
+  placeholder: string;
+  options: Array<{
+    value: string;
+    label: string;
+    icon?: string;
+    status?: string;
+  }>;
+  className?: string;
 }
 
-const CustomDropdown: React.FC<DropdownProps> = ({ value, onValueChange, placeholder, options, className = "" }) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const selectedOption = options.find(option => option.value === value)
+const CustomDropdown: React.FC<DropdownProps> = ({
+  value,
+  onValueChange,
+  placeholder,
+  options,
+  className = "",
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const selectedOption = options.find((option) => option.value === value);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "bg-green-500"
-      case "maintenance": return "bg-[#fece00]"
-      case "inactive": return "bg-gray-500"
-      default: return "bg-gray-500"
+      case "active":
+        return "bg-green-500";
+      case "maintenance":
+        return "bg-[#fece00]";
+      case "inactive":
+        return "bg-gray-500";
+      default:
+        return "bg-gray-500";
     }
-  }
+  };
 
   return (
     <div className={`relative ${className}`}>
@@ -44,7 +65,11 @@ const CustomDropdown: React.FC<DropdownProps> = ({ value, onValueChange, placeho
               {selectedOption.icon && <span>{selectedOption.icon}</span>}
               <span>{selectedOption.label}</span>
               {selectedOption.status && (
-                <div className={`w-2 h-2 rounded-full ${getStatusColor(selectedOption.status)}`}></div>
+                <div
+                  className={`w-2 h-2 rounded-full ${getStatusColor(
+                    selectedOption.status
+                  )}`}
+                ></div>
               )}
             </div>
           ) : (
@@ -52,12 +77,19 @@ const CustomDropdown: React.FC<DropdownProps> = ({ value, onValueChange, placeho
           )}
         </span>
         <svg
-          className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          className={`h-4 w-4 transition-transform duration-200 ${
+            isOpen ? "rotate-180" : ""
+          }`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
         </svg>
       </button>
 
@@ -68,15 +100,19 @@ const CustomDropdown: React.FC<DropdownProps> = ({ value, onValueChange, placeho
               <div
                 key={option.value}
                 onClick={() => {
-                  onValueChange(option.value)
-                  setIsOpen(false)
+                  onValueChange(option.value);
+                  setIsOpen(false);
                 }}
                 className="flex items-center gap-2 px-3 py-2 text-sm text-[#040919] hover:bg-[#fece00]/10 cursor-pointer transition-colors duration-150"
               >
                 {option.icon && <span className="text-lg">{option.icon}</span>}
                 <span className="flex-1">{option.label}</span>
                 {option.status && (
-                  <div className={`w-2 h-2 rounded-full ${getStatusColor(option.status)}`}></div>
+                  <div
+                    className={`w-2 h-2 rounded-full ${getStatusColor(
+                      option.status
+                    )}`}
+                  ></div>
                 )}
               </div>
             ))}
@@ -84,24 +120,24 @@ const CustomDropdown: React.FC<DropdownProps> = ({ value, onValueChange, placeho
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
 export default function SettingsPage() {
-  const [theme, setTheme] = useState("light")
-  const [logoUrl, setLogoUrl] = useState("")
-  const [brandColor, setBrandColor] = useState("#fece00")
-  const [currentBranch, setCurrentBranch] = useState("main")
-  const [preferredLanguage, setPreferredLanguage] = useState("en")
-  const [defaultCurrency, setDefaultCurrency] = useState("INR")
-  const [notifications, setNotifications] = useState(true)
-  const [autoSave, setAutoSave] = useState(true)
-  const [isSaving, setIsSaving] = useState(false)
+  const [theme, setTheme] = useState("light");
+  const [logoUrl, setLogoUrl] = useState("");
+  const [brandColor, setBrandColor] = useState("#fece00");
+  const [currentBranch, setCurrentBranch] = useState("main");
+  const [preferredLanguage, setPreferredLanguage] = useState("en");
+  const [defaultCurrency, setDefaultCurrency] = useState("INR");
+  const [notifications, setNotifications] = useState(true);
+  const [autoSave, setAutoSave] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleSaveSettings = async () => {
-    setIsSaving(true)
+    setIsSaving(true);
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     console.log("Saving settings:", {
       logoUrl,
       brandColor,
@@ -110,51 +146,51 @@ export default function SettingsPage() {
       defaultCurrency,
       theme,
       notifications,
-      autoSave
-    })
-    setIsSaving(false)
+      autoSave,
+    });
+    setIsSaving(false);
     // Show success feedback
-    const button = document.querySelector('.save-button')
+    const button = document.querySelector(".save-button");
     if (button) {
-      button.classList.add('saved')
-      setTimeout(() => button.classList.remove('saved'), 2000)
+      button.classList.add("saved");
+      setTimeout(() => button.classList.remove("saved"), 2000);
     }
-  }
+  };
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLogoUrl(e.target.value)
-  }
+    setLogoUrl(e.target.value);
+  };
 
   const handleBrandColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBrandColor(e.target.value)
-  }
+    setBrandColor(e.target.value);
+  };
 
   const handleThemeChange = (value: string) => {
-    setTheme(value)
-    console.log("Theme changed to:", value)
-  }
+    setTheme(value);
+    console.log("Theme changed to:", value);
+  };
 
   const branches = [
     { value: "main", label: "Main Branch", status: "active" },
     { value: "downtown", label: "Downtown", status: "active" },
     { value: "uptown", label: "Uptown", status: "maintenance" },
     { value: "online", label: "Online Only", status: "active" },
-    { value: "other", label: "Other", status: "inactive" }
-  ]
+    { value: "other", label: "Other", status: "inactive" },
+  ];
 
   const languages = [
     { value: "en", label: "English", icon: "🇺🇸" },
     { value: "hi", label: "Hindi", icon: "🇮🇳" },
     { value: "es", label: "Spanish", icon: "🇪🇸" },
-    { value: "fr", label: "French", icon: "🇫🇷" }
-  ]
+    { value: "fr", label: "French", icon: "🇫🇷" },
+  ];
 
   const currencies = [
     { value: "USD", label: "USD - United States Dollar", icon: "$" },
     { value: "INR", label: "INR - Indian Rupee", icon: "₹" },
     { value: "EUR", label: "EUR - Euro", icon: "€" },
-    { value: "GBP", label: "GBP - British Pound", icon: "£" }
-  ]
+    { value: "GBP", label: "GBP - British Pound", icon: "£" },
+  ];
 
   return (
     <div className="space-y-4 sm:space-y-6 lg:space-y-8">
@@ -164,7 +200,7 @@ export default function SettingsPage() {
           Restaurant Settings
         </h1>
         <p className="text-[#696868] text-sm sm:text-base lg:text-lg">
-          Customize your restaurant's digital experience
+          Customize your restaurant&apos;s digital experience
         </p>
       </div>
 
@@ -178,13 +214,16 @@ export default function SettingsPage() {
             Branding & Appearance
           </CardTitle>
           <CardDescription className="text-[#696868] text-sm sm:text-base">
-            Customize your restaurant's digital presence and visual identity.
+            Customize your restaurant&apos;s digital presence and visual identity.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-4 sm:p-6 space-y-4 sm:space-y-6">
           <div className="grid gap-4">
             <div className="space-y-2">
-              <Label htmlFor="logoUrl" className="text-sm font-medium text-[#040919]">
+              <Label
+                htmlFor="logoUrl"
+                className="text-sm font-medium text-[#040919]"
+              >
                 Restaurant Logo URL
               </Label>
               <div className="relative">
@@ -202,14 +241,19 @@ export default function SettingsPage() {
               {logoUrl && (
                 <div className="mt-3">
                   <div className="h-20 w-20 bg-[#fece00]/20 rounded-xl border-2 border-dashed border-[#fece00] flex items-center justify-center shadow-sm">
-                    <span className="text-[#fe0000] text-xs font-medium">Logo Preview</span>
+                    <span className="text-[#fe0000] text-xs font-medium">
+                      Logo Preview
+                    </span>
                   </div>
                 </div>
               )}
             </div>
-            
+
             <div className="space-y-2">
-              <Label htmlFor="brandColor" className="text-sm font-medium text-[#040919]">
+              <Label
+                htmlFor="brandColor"
+                className="text-sm font-medium text-[#040919]"
+              >
                 Primary Brand Color
               </Label>
               <div className="flex gap-3 items-center">
@@ -223,14 +267,14 @@ export default function SettingsPage() {
                   />
                   <div className="absolute inset-0 rounded-lg shadow-inner pointer-events-none"></div>
                 </div>
-                <Input 
-                  type="text" 
-                  value={brandColor} 
-                  onChange={handleBrandColorChange} 
-                  className="flex-1 transition-all duration-200 focus:ring-2 focus:ring-[#fece00] focus:border-[#fece00] bg-white border-gray-200 text-[#040919] placeholder-[#696868] focus-visible:ring-[#fece00] focus-visible:ring-offset-0 focus-visible:outline-none" 
+                <Input
+                  type="text"
+                  value={brandColor}
+                  onChange={handleBrandColorChange}
+                  className="flex-1 transition-all duration-200 focus:ring-2 focus:ring-[#fece00] focus:border-[#fece00] bg-white border-gray-200 text-[#040919] placeholder-[#696868] focus-visible:ring-[#fece00] focus-visible:ring-offset-0 focus-visible:outline-none"
                   placeholder="#fece00"
                 />
-                <div 
+                <div
                   className="w-8 h-8 rounded-lg border-2 border-gray-200"
                   style={{ backgroundColor: brandColor }}
                 ></div>
@@ -250,7 +294,7 @@ export default function SettingsPage() {
             Branch & Localization
           </CardTitle>
           <CardDescription className="text-[#696868]">
-            Manage your restaurant's branch, language, and currency settings.
+            Manage your restaurant&apos;s branch, language, and currency settings.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
@@ -266,7 +310,7 @@ export default function SettingsPage() {
                 options={branches}
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label className="text-sm font-medium text-[#040919]">
                 Preferred Language
@@ -278,7 +322,7 @@ export default function SettingsPage() {
                 options={languages}
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label className="text-sm font-medium text-[#040919]">
                 Default Currency
@@ -308,68 +352,84 @@ export default function SettingsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6">
-          <RadioGroup value={theme} onValueChange={handleThemeChange} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <RadioGroup
+            value={theme}
+            onValueChange={handleThemeChange}
+            className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+          >
             <div className="relative">
               <RadioGroupItem value="light" id="theme-light" />
-              <label 
-                htmlFor="theme-light" 
+              <label
+                htmlFor="theme-light"
                 className={`block p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
-                  theme === 'light' 
-                    ? 'border-[#fe0000] bg-[#fe0000]/5' 
-                    : 'border-gray-200 hover:border-[#fece00]'
+                  theme === "light"
+                    ? "border-[#fe0000] bg-[#fe0000]/5"
+                    : "border-gray-200 hover:border-[#fece00]"
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <div className="w-4 h-4 rounded-full border-2 border-gray-300 flex items-center justify-center">
-                    {theme === 'light' && <div className="w-2 h-2 bg-[#fe0000] rounded-full"></div>}
+                    {theme === "light" && (
+                      <div className="w-2 h-2 bg-[#fe0000] rounded-full"></div>
+                    )}
                   </div>
                   <div>
                     <div className="font-medium text-[#040919]">Light</div>
-                    <div className="text-sm text-[#696868]">Clean and bright</div>
+                    <div className="text-sm text-[#696868]">
+                      Clean and bright
+                    </div>
                   </div>
                 </div>
               </label>
             </div>
-            
+
             <div className="relative">
               <RadioGroupItem value="dark" id="theme-dark" />
-              <label 
-                htmlFor="theme-dark" 
+              <label
+                htmlFor="theme-dark"
                 className={`block p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
-                  theme === 'dark' 
-                    ? 'border-[#fe0000] bg-[#fe0000]/5' 
-                    : 'border-gray-200 hover:border-[#fece00]'
+                  theme === "dark"
+                    ? "border-[#fe0000] bg-[#fe0000]/5"
+                    : "border-gray-200 hover:border-[#fece00]"
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <div className="w-4 h-4 rounded-full border-2 border-gray-300 flex items-center justify-center">
-                    {theme === 'dark' && <div className="w-2 h-2 bg-[#fe0000] rounded-full"></div>}
+                    {theme === "dark" && (
+                      <div className="w-2 h-2 bg-[#fe0000] rounded-full"></div>
+                    )}
                   </div>
                   <div>
                     <div className="font-medium text-[#040919]">Dark</div>
-                    <div className="text-sm text-[#696868]">Easy on the eyes</div>
+                    <div className="text-sm text-[#696868]">
+                      Easy on the eyes
+                    </div>
                   </div>
                 </div>
               </label>
             </div>
-            
+
             <div className="relative">
               <RadioGroupItem value="system" id="theme-system" />
-              <label 
-                htmlFor="theme-system" 
+              <label
+                htmlFor="theme-system"
                 className={`block p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
-                  theme === 'system' 
-                    ? 'border-[#fe0000] bg-[#fe0000]/5' 
-                    : 'border-gray-200 hover:border-[#fece00]'
+                  theme === "system"
+                    ? "border-[#fe0000] bg-[#fe0000]/5"
+                    : "border-gray-200 hover:border-[#fece00]"
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <div className="w-4 h-4 rounded-full border-2 border-gray-300 flex items-center justify-center">
-                    {theme === 'system' && <div className="w-2 h-2 bg-[#fe0000] rounded-full"></div>}
+                    {theme === "system" && (
+                      <div className="w-2 h-2 bg-[#fe0000] rounded-full"></div>
+                    )}
                   </div>
                   <div>
                     <div className="font-medium text-[#040919]">System</div>
-                    <div className="text-sm text-[#696868]">Follows OS setting</div>
+                    <div className="text-sm text-[#696868]">
+                      Follows OS setting
+                    </div>
                   </div>
                 </div>
               </label>
@@ -394,23 +454,29 @@ export default function SettingsPage() {
         <CardContent className="p-6 space-y-4">
           <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:bg-[#fdfafa] transition-colors">
             <div className="space-y-1">
-              <div className="font-medium text-[#040919]">Push Notifications</div>
-              <div className="text-sm text-[#696868]">Receive updates about orders and system changes</div>
+              <div className="font-medium text-[#040919]">
+                Push Notifications
+              </div>
+              <div className="text-sm text-[#696868]">
+                Receive updates about orders and system changes
+              </div>
             </div>
-            <Switch 
-              checked={notifications} 
+            <Switch
+              checked={notifications}
               onCheckedChange={setNotifications}
               className="data-[state=checked]:bg-[#fe0000]"
             />
           </div>
-          
+
           <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:bg-[#fdfafa] transition-colors">
             <div className="space-y-1">
               <div className="font-medium text-[#040919]">Auto Save</div>
-              <div className="text-sm text-[#696868]">Automatically save changes as you make them</div>
+              <div className="text-sm text-[#696868]">
+                Automatically save changes as you make them
+              </div>
             </div>
-            <Switch 
-              checked={autoSave} 
+            <Switch
+              checked={autoSave}
               onCheckedChange={setAutoSave}
               className="data-[state=checked]:bg-[#fe0000]"
             />
@@ -421,8 +487,8 @@ export default function SettingsPage() {
       {/* Save Button */}
       <Card className="bg-white rounded-lg shadow-sm border border-gray-200">
         <CardFooter className="flex justify-end p-6">
-          <Button 
-            onClick={handleSaveSettings} 
+          <Button
+            onClick={handleSaveSettings}
             disabled={isSaving}
             className="save-button relative overflow-hidden bg-[#fe0000] hover:bg-red-700 text-white font-medium px-8 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -445,7 +511,7 @@ export default function SettingsPage() {
         .save-button.saved {
           background: #10b981 !important;
         }
-        
+
         .save-button.saved::after {
           content: "✓ Saved!";
           position: absolute;
@@ -461,5 +527,5 @@ export default function SettingsPage() {
         }
       `}</style>
     </div>
-  )
+  );
 }

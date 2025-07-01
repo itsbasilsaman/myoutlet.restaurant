@@ -1,5 +1,6 @@
 import api from "@/lib/axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
 interface DeleteTableParams {
   tableId: string;
@@ -16,7 +17,8 @@ export const deleteTableAction = createAsyncThunk(
         },
       });
       return tableId;
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
       return rejectWithValue(error.response?.data || error.message);
     }
   }

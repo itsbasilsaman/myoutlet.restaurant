@@ -9,9 +9,15 @@ interface TokenResponse {
     refresh_token: string;
 }
 
+interface FailedRequest {
+  resolve: (token: string) => void;
+  reject: (err: unknown) => void;
+}
+
+
 class AuthService {
     private isRefreshing = false;
-    private failedRequestsQueue: any[] = [];
+    private failedRequestsQueue: FailedRequest[] = [];
 
     constructor() {
         this.setupInterceptors();
@@ -75,16 +81,17 @@ class AuthService {
         
 }
 
-private processQueue(error: any, token: string | null) {
-    this.failedRequestsQueue.forEach(({ resolve, reject }) => {
-      if(error)  {
-        reject(error);
-      } else {
-        resolve(token);
-      }
-    });
-    this.failedRequestsQueue = [];
-  }
+private processQueue(error: unknown, token: string | null) {
+  this.failedRequestsQueue.forEach(({ resolve, reject }) => {
+    if (error) {
+      reject(error);
+    } else {
+      resolve(token!);
+    }
+  });
+  this.failedRequestsQueue = [];
+}
+
 
   private async refreshToken(): Promise<string> {
    const refreshToken = this.getRefreshToken();
@@ -141,7 +148,7 @@ private processQueue(error: any, token: string | null) {
 
   public hasStoreData(): boolean {
     const storeData = store.getState().restaurant.data;
-    return storeData && Array.isArray(storeData) && storeData.length > 0;
+    return !!(storeData && Array.isArray(storeData) && storeData.length > 0);
   }
 
   public getAuthStatus(): {

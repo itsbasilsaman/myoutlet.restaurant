@@ -32,7 +32,6 @@ export default function OwnerDashboard() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
   const [notifications, setNotifications] = useState(3)
-  const [galleryImages, setGalleryImages] = useState<string[]>([])
 
   // const dispatch = useAppDispatch()
   const restaurantName = useSelector((state: RootState) => state.restaurant.data?.[0]?.name || "The Golden Spoon")
@@ -100,24 +99,6 @@ export default function OwnerDashboard() {
     // Add actual support logic here
   }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (!files) return
-    const newImages: string[] = []
-    Array.from(files).forEach(file => {
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        if (event.target?.result) {
-          setGalleryImages(prev => [...prev, event.target!.result as string])
-        }
-      }
-      reader.readAsDataURL(file)
-    })
-  }
-
-  const handleDeleteImage = (idx: number) => {
-    setGalleryImages(prev => prev.filter((_, i) => i !== idx))
-  }
 
   useEffect(() => {
     if (darkMode) {

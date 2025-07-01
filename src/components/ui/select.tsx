@@ -37,7 +37,7 @@ type SelectComponent = React.FC<SelectProps> & {
   Value: React.FC<SelectValueProps>;
 };
 
-const SelectTrigger: React.FC<SelectTriggerProps> = ({ id, children, onClick, isOpen }) => {
+const SelectTrigger: React.FC<SelectTriggerProps> = ({ id, children, onClick }) => {
   return (
     <button
       id={id}
@@ -75,7 +75,7 @@ const SelectValue: React.FC<SelectValueProps> = ({ placeholder, value }) => {
   return <span className="block truncate">{value || placeholder}</span>;
 };
 
-const Select: SelectComponent = ({ value, onValueChange, children, required }) => {
+const Select: SelectComponent = ({ onValueChange, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
 

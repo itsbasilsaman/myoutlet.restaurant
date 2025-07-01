@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ImageIcon, X, ClipboardCopy } from "lucide-react";
 import Image from "next/image";
 import { useSelector } from "react-redux";
@@ -25,21 +25,21 @@ const Gallery = () => {
 
   console.log(galleryImages,"galleryimagesssss")
 
-  const fetchImages = async () => {
-    if (!storeId) return;
-    try {
-      const res = await api.get(`/gallery/list/${storeId}`);
-      if (res.data.length > 0) {
-        setGalleryImages(res.data);
-      }
-    } catch (error) {
-      console.error("Error fetching gallery images", error);
+  const fetchImages = useCallback(async () => {
+  if (!storeId) return;
+  try {
+    const res = await api.get(`/gallery/list/${storeId}`);
+    if (res.data.length > 0) {
+      setGalleryImages(res.data);
     }
-  };
+  } catch (error) {
+    console.error("Error fetching gallery images", error);
+  }
+}, [api, storeId]);
 
   useEffect(() => {
     fetchImages();
-  }, [storeId]);
+  }, [fetchImages]);
 
   const handleImageUpload = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -48,7 +48,7 @@ const Gallery = () => {
     if (!files || files.length === 0 || !storeId) return;
 
     const formData = new FormData();
-    for (let file of Array.from(files)) {
+    for (const file of Array.from(files)) {
       formData.append("file", file);
     }
 

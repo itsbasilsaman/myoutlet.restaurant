@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import QRCode from 'react-qr-code';
 import { X, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,11 +11,21 @@ type Props = {
 };
 
 export default function QRCodeModal({ onClose, domain }: Props) {
-  const qrRef = useRef<SVGSVGElement | null>(null);
-  const qrValue = domain.startsWith("http") ? domain : `https://${domain}`;
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const qrValue = domain.startsWith('http') ? domain : `https://${domain}`;
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const svg = containerRef.current.querySelector('svg');
+      if (svg instanceof SVGSVGElement) {
+        svgRef.current = svg;
+      }
+    }
+  }, []);
 
   const handleDownload = () => {
-    const svg = qrRef.current;
+    const svg = svgRef.current;
     if (!svg) return;
 
     const serializer = new XMLSerializer();
@@ -49,14 +59,11 @@ export default function QRCodeModal({ onClose, domain }: Props) {
         <h2 className="text-lg font-semibold mb-1">Store QR code</h2>
         <p className="text-sm text-gray-500 mb-4">Downloadable QR code for your store</p>
 
-        <div className="bg-white p-3 rounded-lg border inline-block mx-auto">
-          <QRCode
-            value={qrValue}
-            size={256}
-            ref={(node: any) => {
-              qrRef.current = node as SVGSVGElement;
-            }}
-          />
+        <div
+          ref={containerRef}
+          className="bg-white p-3 rounded-lg border inline-block mx-auto"
+        >
+          <QRCode value={qrValue} size={256} />
         </div>
 
         <Button
