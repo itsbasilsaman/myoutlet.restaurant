@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { ImageIcon, X, ClipboardCopy } from "lucide-react";
 import Image from "next/image";
 import { useSelector } from "react-redux";
@@ -25,7 +25,7 @@ const Gallery = () => {
 
   console.log(galleryImages,"galleryimagesssss")
 
-  const fetchImages = async () => {
+  const fetchImages = useCallback(async () => {
     if (!storeId) return;
     try {
       const res = await api.get(`/gallery/list/${storeId}`);
@@ -35,7 +35,7 @@ const Gallery = () => {
     } catch (error) {
       console.error("Error fetching gallery images", error);
     }
-  };
+  }, [api, storeId]);
 
   useEffect(() => {
     fetchImages();

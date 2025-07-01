@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-interface DropdownMenuProps {
+interface DropdownMenuProps extends Record<string, unknown> {
   children: React.ReactNode;
 }
 
@@ -10,7 +10,7 @@ interface DropdownMenuTriggerProps {
   onClick?: () => void;
 }
 
-interface DropdownMenuContentProps {
+interface DropdownMenuContentProps extends Record<string, unknown> {
   children: React.ReactNode;
   align?: 'start' | 'end';
   isOpen?: boolean;
