@@ -11,8 +11,8 @@ export const fetchTablesAction = createAsyncThunk(
         },
       });
       return response.data;
-    } catch (err: any) {
-      return rejectWithValue(err.response?.data?.message || "Failed to fetch tables");
+    } catch (err: unknown) {
+      return rejectWithValue(err instanceof Error ? err.message : "Failed to fetch tables");
     }
   }
 );

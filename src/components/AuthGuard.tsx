@@ -38,7 +38,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
               refreshToken: cookieRefreshToken,
             })
           );
-        } catch (refreshError) {
+        } catch (error) {
           authService.clearAuthData();
           router.replace("/");
           setIsInitialized(true);

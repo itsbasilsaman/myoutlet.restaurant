@@ -53,7 +53,7 @@ export default function QRCodeModal({ onClose, domain }: Props) {
           <QRCode
             value={qrValue}
             size={256}
-            ref={(node: any) => {
+            ref={(node: unknown) => {
               qrRef.current = node as SVGSVGElement;
             }}
           />

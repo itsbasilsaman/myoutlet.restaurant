@@ -22,9 +22,9 @@ export const addTableAction = createAsyncThunk(
         },
       });
       return response.data;
-    } catch (err: any) {
+    } catch (err: unknown) {
       return rejectWithValue(
-        err.response?.data?.message || "Failed to fetch tables"
+        err instanceof Error ? err.message : "Failed to fetch tables"
       );
     }
   }

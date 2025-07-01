@@ -8,18 +8,13 @@ import { useAuthorizedApi } from "@/hooks/useAuthorizedApi";
 import { useAppDispatch } from "@/hooks/useDispatch";
 import { setRestaurantData } from "@/store/slices/restaurantSlice";
 
-interface RegistrationFormProps {
-  onDetailsSubmit: () => void;
-}
-
+// Add RestaurantSuggestion interface for type safety
 interface RestaurantSuggestion {
   id: string;
   name: string;
 }
 
-export default function RegistrationForm({
-  onDetailsSubmit,
-}: RegistrationFormProps) {
+export default function RegistrationForm() {
   const [restaurantName, setRestaurantName] = useState("");
   const [subBranch, setSubBranch] = useState("");
   const [currency, setCurrency] = useState("");

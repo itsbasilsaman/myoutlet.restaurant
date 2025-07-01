@@ -12,7 +12,7 @@ export const checkUserStoreAction = createAsyncThunk(
       });
 
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       return rejectWithValue(error?.message || "Failed to fetch store");
     }
   }

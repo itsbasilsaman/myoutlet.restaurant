@@ -75,7 +75,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({ children }) => {
 
 export const DropdownMenuTrigger: React.FC<DropdownMenuTriggerProps> = ({ children, asChild, onClick }) => {
   if (asChild && React.isValidElement(children)) {
-    return React.cloneElement(children as React.ReactElement<any>, { onClick });
+    return React.cloneElement(children as React.ReactElement<unknown>, { onClick });
   }
   
   return (

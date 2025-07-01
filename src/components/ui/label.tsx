@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {}
+interface LabelProps extends Record<string, unknown> {}
 
 export const Label: React.FC<LabelProps> = ({ className = '', ...props }) => {
   return (

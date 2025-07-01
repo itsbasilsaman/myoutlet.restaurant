@@ -24,8 +24,8 @@ export const updateTableAction = createAsyncThunk(
         }
       );
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data || error.message);
+    } catch (error: unknown) {
+      return rejectWithValue(error instanceof Error ? error.message : error);
     }
   }
 );

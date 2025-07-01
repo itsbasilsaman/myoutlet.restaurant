@@ -39,7 +39,7 @@ const QRCodeDisplay = ({
   tableId: string;
   tableName: string;
   qrcode?: string;
-  qrRef: any;
+  qrRef: unknown;
 }) => {
   const qrData = qrcode || `https://restaurant.myoutlet.app/table/${tableId}`;
 

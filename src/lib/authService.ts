@@ -11,7 +11,7 @@ interface TokenResponse {
 
 class AuthService {
     private isRefreshing = false;
-    private failedRequestsQueue: any[] = [];
+    private failedRequestsQueue: unknown[] = [];
 
     constructor() {
         this.setupInterceptors();
