@@ -14,36 +14,35 @@ interface GalleryImage {
   originalname: string;
 }
 
-
 const Gallery = () => {
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const [imgLoaded, setImgLoaded] = useState<{ [key: string]: boolean }>({});
 
   const api = useAuthorizedApi();
   const { data } = useSelector((state: RootState) => state.restaurant);
   const storeId = Array.isArray(data) && data.length > 0 ? data[0].id : undefined;
 
-  console.log(galleryImages,"galleryimagesssss")
+  console.log(galleryImages, "galleryimagesssss");
 
   const fetchImages = useCallback(async () => {
-  if (!storeId) return;
-  try {
-    const res = await api.get(`/gallery/list/${storeId}`);
-    if (res.data.length > 0) {
-      setGalleryImages(res.data);
+    if (!storeId) return;
+    try {
+      const res = await api.get(`/gallery/list/${storeId}`);
+      if (res.data.length > 0) {
+        setGalleryImages(res.data);
+      }
+    } catch (error) {
+      console.error("Error fetching gallery images", error);
     }
-  } catch (error) {
-    console.error("Error fetching gallery images", error);
-  }
-}, [api, storeId]);
+  }, [api, storeId]);
 
   useEffect(() => {
     fetchImages();
   }, [fetchImages]);
 
-  const handleImageUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0 || !storeId) return;
 
@@ -67,23 +66,25 @@ const Gallery = () => {
     }
   };
 
- const handleDeleteImage = async (key: string) => {
-  const image = galleryImages.find((img) => img.key === key);
-  if (!image || !image.key) return;
+  const handleDeleteImage = async (key: string) => {
+    const image = galleryImages.find((img) => img.key === key);
+    if (!image || !image.key) return;
 
-  const confirmDelete = window.confirm("Are you sure you want to delete this image?");
-  if (!confirmDelete) return;
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this image?"
+    );
+    if (!confirmDelete) return;
 
-  setLoading(true);
-  try {
-    await api.delete(`/gallery/delete?key=${encodeURIComponent(image.key)}`);
-    setGalleryImages((prev) => prev.filter((img) => img.key !== key));
-  } catch (error) {
-    console.error("Error deleting image", error);
-  } finally {
-    setLoading(false);
-  }
-};
+    setLoading(true);
+    try {
+      await api.delete(`/gallery/delete?key=${encodeURIComponent(image.key)}`);
+      setGalleryImages((prev) => prev.filter((img) => img.key !== key));
+    } catch (error) {
+      console.error("Error deleting image", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleCopyUrl = async (url: string) => {
     try {
@@ -133,28 +134,38 @@ const Gallery = () => {
                   key={img.key}
                   className="relative group border rounded-lg bg-gray-50 overflow-hidden shadow-sm"
                 >
-                  <Image
-                    src={img.display_url}
-                    alt={`Gallery Image ${img.originalname}`}
-                    width={300}
-                    height={200}
-                    className="object-cover w-full h-40"
-                  />
+                  <div className="relative w-full h-40 bg-gray-100">
+                    {!imgLoaded[img.key] && (
+                      <div className="absolute inset-0 animate-pulse bg-gray-300 z-10 rounded-t-lg" />
+                    )}
+                    <Image
+                      src={img.display_url}
+                      alt={`Gallery Image ${img.originalname}`}
+                      width={300}
+                      height={200}
+                      className="object-cover w-full h-40"
+                      onLoad={() =>
+                        setImgLoaded((prev) => ({ ...prev, [img.key]: true }))
+                      }
+                    />
+                  </div>
 
-                  <div className="absolute top-2 right-2 flex flex-col space-y-1">
-                    <button
-                      onClick={() => handleDeleteImage(img.key)}
-                      title="Delete"
-                      className="bg-[#fe0000] text-white p-1 rounded-full text-xs opacity-80 hover:opacity-100 shadow"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
+                  <div className="flex w-full border-t text-xs text-white">
                     <button
                       onClick={() => handleCopyUrl(img.copy_url)}
+                      className="flex-1 bg-gray-800 hover:bg-gray-700 py-1 flex justify-center items-center gap-1 rounded-bl-lg"
                       title="Copy URL"
-                      className="bg-white text-[#fe0000] p-1 rounded-full text-xs border hover:bg-gray-100 shadow"
                     >
                       <ClipboardCopy className="w-4 h-4" />
+                      Copy
+                    </button>
+                    <button
+                      onClick={() => handleDeleteImage(img.key)}
+                      className="flex-1 bg-[#fe0000] hover:bg-red-700 py-1 flex justify-center items-center gap-1 rounded-br-lg"
+                      title="Delete"
+                    >
+                      <X className="w-4 h-4" />
+                      Delete
                     </button>
                   </div>
                 </div>
