@@ -53,7 +53,7 @@ export default function RegistrationForm({ onDetailsSubmit }: RegistrationFormPr
           setShowSuggestions(true);
         } catch(error) {
           setSuggestions([]);
-          console.log(error,"error");
+          console.log(error, "error");
         } finally {
           setIsLoading(false);
         }
